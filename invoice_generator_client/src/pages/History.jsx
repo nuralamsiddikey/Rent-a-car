@@ -4,13 +4,13 @@ const History = () => {
   const [reserve, setReserve] = useState([]);
 
   useEffect(() => {
-    fetch("http://localhost:4000/reserve")
+    fetch("https://deploy-invoice.onrender.com/reserve")
       .then((res) => res.json())
       .then((result) => setReserve(result.data));
   }, []);
 
   const generateInvoice = (id) => {
-    fetch(`http://localhost:4000/invoice/${id}`)
+    fetch(`https://deploy-invoice.onrender.com/invoice/${id}`)
       .then((res) => res.json())
       .then((invoiceData) => {
         printInvoice(invoiceData);
@@ -20,7 +20,6 @@ const History = () => {
       });
   };
 
-  
   const printInvoice = (invoiceData) => {
     console.log(invoiceData);
     var invoiceContent = `
@@ -62,7 +61,9 @@ const History = () => {
                       ? `<tr> 
                             <td>Hourly</td>
                             <td>${invoiceData.hour}</td>
-                            <td>${invoiceData.hour*invoiceData.hourlyRate}</td>
+                            <td>${
+                              invoiceData.hour * invoiceData.hourlyRate
+                            }</td>
                         </tr>`
                       : ""
                   }
@@ -71,7 +72,7 @@ const History = () => {
                       ? `<tr> 
                             <td>Day</td>
                             <td>${invoiceData.day}</td>
-                            <td>${invoiceData.day*invoiceData.dailyRate}</td>
+                            <td>${invoiceData.day * invoiceData.dailyRate}</td>
                         </tr>`
                       : ""
                   }
@@ -81,7 +82,9 @@ const History = () => {
                       ? `<tr> 
                             <td>Week</td>
                             <td>${invoiceData.week}</td>
-                            <td>${invoiceData.week*invoiceData.weeklyRate}</td>
+                            <td>${
+                              invoiceData.week * invoiceData.weeklyRate
+                            }</td>
                         </tr>`
                       : ""
                   }

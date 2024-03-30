@@ -7,7 +7,7 @@ export const CarContextProvider = ({ children }) => {
   const [loading,setLoading] = useState(true)
 
   useEffect(() => {
-    fetch("http://localhost:4000/carsList")
+    fetch("https://deploy-invoice.onrender.com/carsList")
       .then((response) => response.json())
       .then((result) => {
         setCars(result.data)

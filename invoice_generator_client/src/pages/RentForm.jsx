@@ -66,7 +66,7 @@ const RentForm = () => {
   };
 
   const handleSubmit = () => {
-    fetch("http://localhost:4000/reserve", {
+    fetch("https://deploy-invoice.onrender.com/reserve", {
       method: "POST",
       headers: {
         "Content-type": "application/json",
@@ -82,8 +82,9 @@ const RentForm = () => {
 
   useEffect(() => {
     const selectedCar = cars?.filter((c) => c.id === id);
+
     setCar(selectedCar[0]);
-  }, []);
+  }, [customerInfo]);
 
   useEffect(() => {
     const dif = hourDifference(
@@ -332,24 +333,24 @@ const RentForm = () => {
                   <tr>
                     <td>Hour</td>
                     <td>{hour}</td>
-                    <td>c</td>
-                    <td>d</td>
+                    <td></td>
+                    <td></td>
                   </tr>
                 )}
-                  {day && (
+                {day && (
                   <tr>
                     <td>Day</td>
                     <td>{day}</td>
-                    <td>c</td>
-                    <td>d</td>
+                    <td></td>
+                    <td></td>
                   </tr>
                 )}
-                  {week && (
+                {week && (
                   <tr>
                     <td>Week</td>
                     <td>{week}</td>
-                    <td>c</td>
-                    <td>d</td>
+                    <td></td>
+                    <td></td>
                   </tr>
                 )}
               </tbody>
