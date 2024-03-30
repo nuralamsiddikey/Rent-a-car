@@ -49,7 +49,7 @@ const reserveSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-});
+},{timestamps:true});
 
 
 const Reserve = mongoose.model('Reserve',reserveSchema)

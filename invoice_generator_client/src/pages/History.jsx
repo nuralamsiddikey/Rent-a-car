@@ -20,13 +20,131 @@ const History = () => {
       });
   };
 
+  
   const printInvoice = (invoiceData) => {
+    console.log(invoiceData);
     var invoiceContent = `
-      <div>
-        <h1>Invoice</h1>
-        <p>Name: ${invoiceData.firstName} ${invoiceData.lastName}</p>
-        <p>Address: ${invoiceData.address}</p>
-      </div>
+      <html>
+      <head>
+        <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+        <style>
+       
+        </style>
+      </head>
+      <body>
+        <div class="flex justify-center gap-5">
+          <div>
+              <h2>RENTER INFO</h2>
+              <p>${invoiceData.firstName} ${invoiceData.lastName}</p>
+              <p>${invoiceData.email}</p>
+              <p>${invoiceData.phoneNumber}</p>
+          </div>
+          <div>
+              <h2>Reservation</h2>
+              <p>Date/Time Out: ${invoiceData.pickupDateTime}</p>
+              <p>Date/Time Out: ${invoiceData.dropDateTime}</p>
+
+              <div class="bg-gray-300 p-2">
+                <h2 class="font-bold">CHARGE SUMMARY</h2>
+
+                <table>
+                  <thead>
+                    <tr>
+                        <th></th>
+                        <th>Unit</th>
+                        <th>Amount</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                  ${
+                    invoiceData.hour
+                      ? `<tr> 
+                            <td>Hourly</td>
+                            <td>${invoiceData.hour}</td>
+                            <td>${invoiceData.hour*invoiceData.hourlyRate}</td>
+                        </tr>`
+                      : ""
+                  }
+                  ${
+                    invoiceData.day
+                      ? `<tr> 
+                            <td>Day</td>
+                            <td>${invoiceData.day}</td>
+                            <td>${invoiceData.day*invoiceData.dailyRate}</td>
+                        </tr>`
+                      : ""
+                  }
+
+                  ${
+                    invoiceData.week
+                      ? `<tr> 
+                            <td>Week</td>
+                            <td>${invoiceData.week}</td>
+                            <td>${invoiceData.week*invoiceData.weeklyRate}</td>
+                        </tr>`
+                      : ""
+                  }
+                  ${
+                    invoiceData.discount
+                      ? `<tr> 
+                            <td>Discount</td>
+                            <td></td>
+                            <td>${invoiceData.discount}</td>
+                        </tr>`
+                      : ""
+                  }
+
+                  ${
+                    invoiceData.additionalCharge
+                      ? `<tr> 
+                            <td>Additional Charge</td>
+                            <td></td>
+                            <td>${invoiceData.additionalCharge}</td>
+                        </tr>`
+                      : ""
+                  }
+                  ${
+                    invoiceData.collisionDamageWaiver
+                      ? `<tr> 
+                            <td>Collision Damage waiver</td>
+                            <td></td>
+                            <td>9$</td>
+                        </tr>`
+                      : ""
+                  }
+                  ${
+                    invoiceData.liabilityInsurance
+                      ? `<tr> 
+                            <td>Liability Insurance</td>
+                            <td></td>
+                            <td>16$</td>
+                        </tr>`
+                      : ""
+                  }
+                  ${
+                    invoiceData.rentTax
+                      ? `<tr> 
+                            <td>Rent tax</td>
+                            <td></td>
+                            <td>11$</td>
+                        </tr>`
+                      : ""
+                  }
+                  
+                  
+                  </tbody>
+                </table>
+
+                <hr>
+                <h2>Total: ${invoiceData.total} $</h2>
+
+
+              </div>
+          </div>
+        </div>
+      </body>
+      </html>
     `;
 
     var printWindow = window.open("", "_blank");

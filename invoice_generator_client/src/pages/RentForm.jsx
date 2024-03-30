@@ -1,11 +1,45 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useCarContext } from "../Context";
+import toast from "react-hot-toast";
+
+function hourDifference(date1, date2) {
+  const d1 = new Date(date1);
+  const d2 = new Date(date2);
+
+  let diffMilliseconds = Math.abs(d2 - d1);
+
+  let hourDiff = diffMilliseconds / (1000 * 60 * 60);
+
+  let result = {};
+
+  if (hourDiff >= 24) {
+    let days = Math.floor(hourDiff / 24);
+    let remainingHours = Math.floor(hourDiff % 24);
+    if (days >= 7) {
+      let weeks = Math.floor(days / 7);
+      let remainingDays = days % 7;
+      result.week = weeks;
+      result.day = remainingDays;
+      result.hour = remainingHours;
+    } else {
+      result.day = days;
+      result.hour = remainingHours;
+    }
+  } else {
+    result.hour = Math.floor(hourDiff);
+  }
+  return result;
+}
 
 const RentForm = () => {
   const { id } = useParams();
   const { cars } = useCarContext();
   const [car, setCar] = useState({});
+  const [hour, setHour] = useState(null);
+  const [day, setDay] = useState(null);
+  const [week, setWeek] = useState(null);
+
   const [customerInfo, setCustomerInfo] = useState({
     firstName: "",
     lastName: "",
@@ -22,6 +56,8 @@ const RentForm = () => {
     rentTax: false,
   });
 
+  const navigate = useNavigate();
+
   const handleOnChange = (event) => {
     const { name, value } = event.target;
     setCustomerInfo((prevData) => {
@@ -30,22 +66,35 @@ const RentForm = () => {
   };
 
   const handleSubmit = () => {
-    fetch('http://localhost:4000/reserve',{
-      method:'POST',
+    fetch("http://localhost:4000/reserve", {
+      method: "POST",
       headers: {
-        'Content-type':'application/json'
+        "Content-type": "application/json",
       },
-      body: JSON.stringify(customerInfo)
-    })
-    .then(res=> res.json())
-    .then(result=>console.log(result))
+      body: JSON.stringify(customerInfo),
+    }).then((res) => {
+      if (res.ok) {
+        toast.success("Successfully created!");
+        navigate("/history");
+      } else toast.error("Something went wrong");
+    });
   };
-
 
   useEffect(() => {
     const selectedCar = cars?.filter((c) => c.id === id);
     setCar(selectedCar[0]);
   }, []);
+
+  useEffect(() => {
+    const dif = hourDifference(
+      customerInfo.pickupDateTime,
+      customerInfo.dropDateTime
+    );
+    console.log(dif);
+    if (dif.day) setDay(dif.day);
+    if (dif.week) setWeek(dif.week);
+    if (dif.hour) setHour(dif.hour);
+  }, [customerInfo.pickupDateTime, customerInfo.dropDateTime]);
 
   return (
     <div className="border p-10 m-4 mt-10 rounded-lg">
@@ -97,7 +146,11 @@ const RentForm = () => {
 
               <div className="flex justify-between my-2">
                 <p>Duration</p>
-                <p className="border py-1 px-5 rounded-lg">1 Week Day</p>
+                <p className="border py-1 px-5 rounded-lg">
+                  {week && <span>{week}week </span>}
+                  {day && <span>{day}day </span>}
+                  {hour && <span>{hour}hour</span>}
+                </p>
               </div>
 
               <label htmlFor="discount" className="text-gray-600">
@@ -275,12 +328,30 @@ const RentForm = () => {
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>a</td>
-                  <td>b</td>
-                  <td>c</td>
-                  <td>d</td>
-                </tr>
+                {hour && (
+                  <tr>
+                    <td>Hour</td>
+                    <td>{hour}</td>
+                    <td>c</td>
+                    <td>d</td>
+                  </tr>
+                )}
+                  {day && (
+                  <tr>
+                    <td>Day</td>
+                    <td>{day}</td>
+                    <td>c</td>
+                    <td>d</td>
+                  </tr>
+                )}
+                  {week && (
+                  <tr>
+                    <td>Week</td>
+                    <td>{week}</td>
+                    <td>c</td>
+                    <td>d</td>
+                  </tr>
+                )}
               </tbody>
             </table>
           </div>
